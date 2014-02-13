@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.states {
+  fill: #ccc;
+  stroke: #fff;
+}
+
+.offer_point {
+  fill: steelblue;
+  fill-opacity: .8;
+  stroke: #fff;
+}
+
+.label {
+  font-family: sans-serif;
+  font-size: 10;
+}
+
+.chart rect {
+  fill: steelblue;
+  fill-opacity: .7;
+}
+
+.chart .name {
+  fill: black;
+  font: 16px sans-serif;
+  text-anchor: end;
+}
+
+.chart .amount {
+  fill: black;
+  font: 16px sans-serif;
+  text-anchor: start;
+}
+
+</style>
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="http://d3js.org/colorbrewer.v1.min.js"></script>
+<script>
+
+
+queue()
+    .defer(d3.json, "us.json")
+    .defer(d3.json, "us-state-centroids.json")
+    .defer(d3.json, "col_data.json")
+    .defer(d3.json, "data.json")
+    .await(ready);
+
+function ready(error, us, centroid, col, offers) {
+
+  offers = offers.offers;
+
+  var width = 500,
+      height = 260;
+
+  var projection = d3.geo.albersUsa().scale(width)
+    .translate([width / 2, height / 2]);
+
+  var path = d3.geo.path().projection(projection);
+
+  var geo_map = d3.select("#geo_map").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  geo_map.append("path")
+    .attr("class", "states")
+    .datum(topojson.feature(us, us.objects.states))
+    .attr("d", path);
+
+  var offer_points = geo_map.selectAll(".offer_point")
+    .data(offers)
+    .enter().append("g");
+
+  offer_points.append("svg:circle")
+    .attr("transform", function(d) {return "translate(" + projection(d.coordinates) + ")";})
+    .attr("class", "offer_point")
+    .attr('r',4.5);
+
+  offer_points.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", function(d) {return "translate(" + projection(d.coordinates) + ")";})
+    .attr("dy",-10)
+    .attr("class","label")
+    .text(function(d){return d.company;});
+
+//    var svg = d3.select("#col_pie")
+//      .selectAll("pies")
+//      .data(offers).enter().append("svg")
+//      .attr("width", width)
+//      .attr("height", height)
+//      .append("g")
+//      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+//
+//    var color = d3.scale.ordinal()
+//      .range(colorbrewer.Blues[6]);
+//
+//    var arc = d3.svg.arc()
+//      .outerRadius(function(d,i) { return radius_scale(d.data.value) * radius; })
+//      .innerRadius(radius * 0.4);
+//
+//    var col_weights = d3.map({"food":13,"housing":29,"utilities":10,"transportation":12,"health":4,"misc":32});
+//
+//    var pie = d3.layout.pie()
+//      .sort(null)
+//      .value(function(d) {console.log(d); return col_weights[d.key]; });
+//
+//    var g = svg.selectAll(".arc")
+//      .data(pie(offers))
+//      .enter().append("g")
+//      .attr("class", "arc");
+//
+//
+//    g.append("path")
+//      .attr("d", arc)
+//      .style("fill", function(d) { console.log(d);return color(d.data.col.key); });
+//
+//    g.append("text")
+//      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+//      .attr("dy", ".35em")
+//      .attr("style","font-family: sans-serif; font-size: 8pt;")
+//      .style("text-anchor", "middle")
+//      .text(function(d) { return d.data.key ; });
+//    g.append("text")
+//      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+//      .attr("dy", "1.35em")
+//      .attr("style","font-family: sans-serif; font-size: 8pt;")
+//      .style("text-anchor", "middle")
+//      .text(function(d) { return " (" + d.data.value + ")";});
+//
+//    svg.append("text")
+//      .attr("class","label")
+//      .style("text-anchor", "middle")
+//      .text(city_name);
+//    svg.append("text")
+//      .attr("class","label")
+//      .style("text-anchor", "middle")
+//      .attr("dy",18)
+//      .text(overall);
+
+  var side = 300;
+  width = side;
+  height = side;
+  var radius = radius = side / 2;
+
+  var radius_scale = d3.scale.linear()
+    .domain([79.3,311.8])
+    .range([0.6,1.0]);
+
+
+  for (var i = 0; i < col.col_data.length; i++) {
+
+    var data2=col.col_data[i];
+    data2=d3.map(data2);
+    var city_name = data2.get("name");
+    var overall = data2.get("overall");
+
+    data2.remove("name");data2.remove("overall");
+    var entries = d3.entries(data2);
+
+    var svg = d3.select("#col_pie").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var color = d3.scale.ordinal()
+      .range(colorbrewer.Blues[6]);
+
+    var arc = d3.svg.arc()
+      .outerRadius(function(d,i) { return radius_scale(d.data.value) * radius; })
+      .innerRadius(radius * 0.4);
+
+    var col_weights = d3.map({"food":13,"housing":29,"utilities":10,"transportation":12,"health":4,"misc":32});
+
+    var pie = d3.layout.pie()
+      .sort(null)
+      .value(function(d) { return col_weights[d.key]; });
+    //.value(function(d) { return d.value; });
+
+    var g = svg.selectAll(".arc")
+      .data(pie(entries))
+      .enter().append("g")
+      .attr("class", "arc");
+
+    g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.key); });
+
+    g.append("text")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .attr("style","font-family: sans-serif; font-size: 8pt;")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.data.key ; });
+    g.append("text")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("dy", "1.35em")
+      .attr("style","font-family: sans-serif; font-size: 8pt;")
+      .style("text-anchor", "middle")
+      .text(function(d) { return " (" + d.data.value + ")";});
+
+    svg.append("text")
+      .attr("class","label")
+      .style("text-anchor", "middle")
+      .text(city_name);
+    svg.append("text")
+      .attr("class","label")
+      .style("text-anchor", "middle")
+      .attr("dy",18)
+      .text(overall);
+  }
+
+  var data = col.col_data;
+  data = data.map(function(e){return d3.map({"name":e.name,"dollar_power":((95.6/parseFloat(e.overall))*100)});});
+
+  var width = 600,
+      barHeight = 32;
+
+  var overall_accessor = function (d) {
+    return d.get("dollar_power");
+  }
+
+  var x = d3.scale.linear()
+    .domain([0, d3.max(data, overall_accessor)])
+    .range([0, width-60]);
+
+
+  var color_scale = d3.scale.linear()
+    .domain([0, d3.max(data, overall_accessor)])
+    .range(["white","rgb(8,81,156)"]);
+
+  var chart = d3.select(".chart")
+    .attr("width", width)
+    .attr("height", barHeight * data.length);
+
+  var bar = chart.selectAll("g")
+    .data(data)
+    .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+  bar.append("rect")
+    .attr("width", function(d){ return x(d.get("dollar_power"));})
+    .attr("height", barHeight - 3)
+    .style("fill", function(d) { return color_scale(d.get("dollar_power")); });
+
+  bar.append("text")
+    .attr("class","name")
+    .attr("x", function(d){ return x(d.get("dollar_power"))-3;})
+    .attr("y", barHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d){ return d.get("name");});
+
+  bar.append("text")
+    .attr("class","amount")
+    .attr("x", function(d){ return x(d.get("dollar_power"))+3;})
+    .attr("y", barHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d){ return "$"+d.get("dollar_power").toFixed(2);});
+
+}
+
+</script>
+<div id="geo_map">
+  <h3>Offer Locations</h3>
+</div>
+<div id="col_pie">
+  <h3>Cost of Living Breakdown</h3>
+  <p>Weights (food = 13%, housing = 29%, utilities = 10%, transportation = 12%, health care = 4%, miscellaneous = 32%) based on Bureau of Labor Statistics.
+</div>
+<div id="dollar_power">
+  <h3>Value of 100 Atlanta Dollars</h3>
+  <svg class="chart"></svg>
+</div>

@@ -1,0 +1,23 @@
+{"offers":[
+  {"company":"Yelp", "city":"San Francisco",
+    "coordinates":[-122.41666,37.783333],
+    "col":{"overall":164, "food":111.9, "housing":281.94, "utilities":94.5, "transportation":113, "health":117, "misc":124.3},
+    "weather":[51.3,53.9,55.1,56.2,57.6,59.6,60.3,61.6,52.7,61.5,56.6,51.6]
+  },
+  {"company":"Home", "city":"Atlanta",
+    "coordinates":[-84.39,33.755],
+    "col":{"overall":95.6, "food":96.2, "housing":90.7, "utilities":86.3, "transportation":99.3, "health":103.3, "misc":100.3},
+    "weather":[43.3,47.2,54.3,62.0,70.1,77.3,80.2,79.4,73.5,63.3,54.0,45.3]
+  },
+  {"company":"Morgan Stanley", "city":"New York City",
+    "coordinates":[-73.94,40.67],
+    "col":{"overall":185.8, "food":137.7, "housing":311.8, "utilities":168.9, "transportation":110.7, "health":119.9, "misc":129.7},
+    "weather":[32.7,34.9,41.6,51.3,60.6,70.4,75.8,74.9,68.1,57.0,47.5,37.7]
+  },
+  {"company":"Berkshire Hathaway", "city":"Omaha",
+    "coordinates":[-96,41.25],
+    "col":{"overall":88.3, "food":92, "housing":79.3, "utilities":89.9, "transportation":100, "health":96.8, "misc":89.7},
+    "weather":[23.5,18.1,39.5,51.7,62.3,72.1,76.7,74.6,65.7,53.2,38.9,26.0]
+  }
+  ]
+}
