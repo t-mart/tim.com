@@ -1,6 +1,0 @@
-{"type":"FeatureCollection","features":[
-  {"type":"Feature","geometry":{"type":"Point","coordinates":[-122.41666,37.783333]},"properties":{"name":"Yelp"}},
-  {"type":"Feature","geometry":{"type":"Point","coordinates":[-84.39,33.755]},"properties":{"name":"Home"}},
-  {"type":"Feature","geometry":{"type":"Point","coordinates":[-73.94,40.67]},"properties":{"name":"Morgan Stanley"}},
-  {"type":"Feature","geometry":{"type":"Point","coordinates":[-96,41.25]},"properties":{"name":"Berkshire Hathaway"}}
-  ]}

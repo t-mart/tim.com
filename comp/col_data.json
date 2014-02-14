@@ -1,6 +1,0 @@
-{"col_data":[
-  {"name":"Atlanta", "overall":95.6, "food":96.2, "housing":90.7, "utilities":86.3, "transportation":99.3, "health":103.3, "misc":100.3},
-  {"name":"New York City", "overall":185.8, "food":137.7, "housing":311.8, "utilities":168.9, "transportation":110.7, "health":119.9, "misc":129.7},
-  {"name":"San Francisco", "overall":164, "food":111.9, "housing":281.94, "utilities":94.5, "transportation":113, "health":117, "misc":124.3},
-  {"name":"Omaha", "overall":88.3, "food":92, "housing":79.3, "utilities":89.9, "transportation":100, "health":96.8, "misc":89.7}
-    ]}
