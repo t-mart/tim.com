@@ -1,0 +1,3 @@
+[submodule "whiskey"]
+	path = whiskey
+	url = git@github.com:t-mart/d3whiskey.git
